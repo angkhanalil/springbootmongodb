@@ -33,13 +33,13 @@ public class TodoController {
 
   @GetMapping("/todos")
   public ResponseEntity<?> getAllTodos() {
-    List<TodoDTO> todos = todoRepository.findAll();
-    if (todos.size() > 0) {
-      return new ResponseEntity<List<TodoDTO>>(todos, HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>("No todos available", HttpStatus.NOT_FOUND);
-    }
-
+    List<TodoDTO> todos = todoService.getAllTodos();
+    // if (todos.size() > 0) {
+    // return new ResponseEntity<List<TodoDTO>>(todos, HttpStatus.OK);
+    // } else {
+    // return new ResponseEntity<>("No todos available", HttpStatus.NOT_FOUND);
+    // }
+    return new ResponseEntity<>(todos, todos.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
   }
 
   @PostMapping("/todos")
@@ -60,11 +60,19 @@ public class TodoController {
 
   @GetMapping("/todos/{id}")
   public ResponseEntity<?> getSingleTodo(@PathVariable("id") String id) {
-    Optional<TodoDTO> todoOptional = todoRepository.findById(id);
-    if (todoOptional.isPresent()) {
-      return new ResponseEntity<>(todoOptional.get(), HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>("Todo not found with id:" + id, HttpStatus.NOT_FOUND);
+    // Optional<TodoDTO> todoOptional = todoRepository.findById(id);
+    // if (todoOptional.isPresent()) {
+    // return new ResponseEntity<>(todoOptional.get(), HttpStatus.OK);
+    // } else {
+    // return new ResponseEntity<>("Todo not found with id:" + id,
+    // HttpStatus.NOT_FOUND);
+    // }
+
+    // use service
+    try {
+      return new ResponseEntity<>(todoService.getSingleTodo(id), HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
   }
 
